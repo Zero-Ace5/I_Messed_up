@@ -1,0 +1,4 @@
+LETTER = 960+1
+print(chr(LETTER))
+print(chr(LETTER//2))
+print(chr(LETTER//10))

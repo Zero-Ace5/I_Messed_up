@@ -1,0 +1,5 @@
+TYPE = type(5)
+print(TYPE)
+print(type(TYPE))
+TYPE_2 = str(TYPE)
+print(TYPE_2)

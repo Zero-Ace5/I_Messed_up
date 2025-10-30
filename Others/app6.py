@@ -1,0 +1,16 @@
+COURSE = "   PYTHON PROGRAMMING"
+COURSE = "PYTHON PROGRAMMING"
+COUNT = COURSE.upper()
+COUNTT = COURSE.lower()
+COUNTTT = COURSE.title()
+COUNTTTT = COURSE.strip()
+print(COUNT)
+print(COUNTT)
+print(COUNTTT)
+print(COUNTTTT)
+FIND = COURSE.find("O")
+print(FIND)
+REPLACE = COURSE.replace("P", "J")
+print(REPLACE)
+print("pYT" in COURSE)
+print("somil" not in COURSE)
