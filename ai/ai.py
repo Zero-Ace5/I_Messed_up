@@ -5,7 +5,8 @@ import httpx
 app = FastAPI(title="Mini AI powered by Hugging AI 💵")
 
 API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
-TOKEN = "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"
+# TOKEN = ""
+# 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
 
 
 async def query(prompt: str):
