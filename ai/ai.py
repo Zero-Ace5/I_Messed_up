@@ -1,45 +1,52 @@
+import os
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
-import httpx
+from dotenv import load_dotenv
+from openai import OpenAI
 
-app = FastAPI(title="Mini AI powered by Hugging AI 💵")
+load_dotenv()
 
-API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
-TOKEN = ""
+app = FastAPI(title="Mini AI powered by AIML API 💬")
+api_key = os.getenv("AIML_API_KEY")
+
+if not api_key:
+    raise ValueError("⚠️ AIML_API_KEY not found in .env file!")
+
+client = OpenAI(
+    api_key=api_key,
+    base_url="https://api.aimlapi.com/v1"
+)
 
 
 async def query(prompt: str):
-    async with httpx.AsyncClient(timeout=90) as client:
-        response = await client.post(
-            API_URL,
-            headers={
-                "Authorization": f"Bearer {TOKEN}",
-                "Content-Type": "application/json",
-            },
-            json={"inputs": prompt},
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=200
         )
-        if response.status_code != 200:
-            return f"❤️We are f*cked bros, AI not responding {response.status_code}"
-
-        data = response.json()
-        try:
-            return data[0]["generated_text"]
-        except Exception:
-            return str(data)
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"⚠️ Error contacting AIML API: {e}"
 
 
-@app.get('/', response_class=HTMLResponse)
+# 🏠 Homepage
+@app.get("/", response_class=HTMLResponse)
 def home():
     return """
     <html>
     <head>
         <title>Mini AI Chat</title>
         <style>
-            body { font-family: Arial; background: #fafafa; text-align: center; padding: 40px; }
+            body { font-family: Arial; background: #fdfdfd; text-align: center; padding: 40px; }
             h1 { color: #4A148C; }
             textarea { width: 80%; height: 100px; font-size: 16px; padding: 10px; }
-            button { margin-top: 10px; padding: 10px 20px; font-size: 16px; background: #4A148C; color: white; border: none; cursor: pointer; }
-            .response { margin-top: 30px; text-align: left; width: 80%; margin-left: auto; margin-right: auto; background: #f1f1f1; padding: 15px; border-radius: 8px; }
+            button { margin-top: 10px; padding: 10px 20px; font-size: 16px; background: #4A148C; color: white; border: none; cursor: pointer; border-radius: 6px; }
+            .response { margin-top: 30px; text-align: left; width: 80%; margin-left: auto; margin-right: auto; background: #f1f1f1; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         </style>
     </head>
     <body>
@@ -47,20 +54,19 @@ def home():
          <form action="/ask" method="post">
             <textarea name="prompt" placeholder="Ask me anything..." required></textarea><br>
             <button type="submit">Ask</button>
-        </form>
+         </form>
     </body>
     </html>
     """
 
 
+# 💬 Chat endpoint
 @app.post("/ask", response_class=HTMLResponse)
 async def ask(prompt: str = Form(...)):
     reply = await query(prompt)
     html = f"""
     <html>
-    <head>
-        <title>Mini AI Chat</title>
-    </head>
+    <head><title>Mini AI Chat</title></head>
     <body style="font-family: Arial; background: #fafafa; text-align:center; padding:40px;">
         <h1>🤖 Mini AI Chat Assistant</h1>
         <div class="response">
