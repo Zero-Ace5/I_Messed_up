@@ -5,45 +5,43 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL = "mistral"
 
 
-async def answer_query(query, memory):
-    prompt = f"""
-You are a context-aware assistant.
-Use the following memory and prior context to answer:
+def _build_prompt(query: str, docs: list[str]) -> str:
+    context = "\n\n".join(docs) if docs else "(no retrieved context)"
+    return f"""You are a helpful assistant. Use the context to answer concisely. If the context is insufficient, say you don't know.
 
-Memory:
-{memory}
+Context:
+{context}
 
-User question:
-{query}
-"""
+Question: {query}
+Answer:"""
 
+
+async def answer_query(query, memory) -> str:
+    # 1) Retrieve relevant docs from Chroma
+    try:
+        # returns dict with 'documents' as list-of-lists
+        results = memory.search(query, n=3)
+        docs = results.get("documents", [[]])[0]
+    except Exception:
+        docs = []
+
+    prompt = _build_prompt(query, docs)
+
+    # 2) Call Ollama and parse streaming JSON lines
     async with httpx.AsyncClient(timeout=None) as client:
         res = await client.post(OLLAMA_URL, json={"model": MODEL, "prompt": prompt})
-
-        # Read the full streaming output
         raw = await res.aread()
         text = raw.decode().strip()
-        print("🔍 DEBUG RAW RESPONSE FROM OLLAMA:\n", text, "\n" + "-" * 80)
 
-        # Split the response into separate JSON objects
-        lines = text.splitlines()
-        responses = []
+    parts = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        try:
+            obj = json.loads(line)
+            if "response" in obj:
+                parts.append(obj["response"])
+        except json.JSONDecodeError:
+            continue
 
-        for line in lines:
-            if not line.strip():
-                continue
-            try:
-                obj = json.loads(line)
-                if "response" in obj:
-                    responses.append(obj["response"])
-            except json.JSONDecodeError:
-                # Ignore malformed lines
-                continue
-
-        # Join all chunks into one coherent reply
-        combined_response = "".join(responses).strip()
-
-        return {
-            "context": memory[:1000],  # optional small context preview
-            "response": combined_response or "⚠️ No valid response from Ollama."
-        }
+    return "".join(parts).strip() or "No valid response from Ollama."
