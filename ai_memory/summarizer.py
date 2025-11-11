@@ -16,6 +16,7 @@ async def summarize_text(text: str):
             try:
                 data = json.loads(line)
                 content += data.get("response", "")
+                print(content)
             except:
                 pass
     return content
