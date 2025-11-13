@@ -1,5 +1,7 @@
 import os
 import yt_dlp
+import threading
+import time
 from flask import Flask, render_template_string, request, redirect, url_for, send_from_directory
 
 app = Flask(__name__)
@@ -63,6 +65,18 @@ def download():
 
 @app.route("/downloads/<path:filename>")
 def save_file(filename):
+    file_path = os.path.join(DOWNLOAD_DIR, filename)
+
+    def delayed_delete(path):
+        time.sleep(30)
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+                print(f"Deleted Old File: {path}")
+        except Exception as e:
+            print(f"Delete File Error: {e}")
+    threading.Thread(target=delayed_delete, args=(
+        file_path,), daemon=True).start()
     return send_from_directory(DOWNLOAD_DIR, filename, as_attachment=True)
 
 
