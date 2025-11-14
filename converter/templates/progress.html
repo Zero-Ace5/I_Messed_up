@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Converting...</title>
+</head>
+
+<body style="font-family:sans-serif; text-align:center; margin-top:50px;">
+    <h2>Converting your file...</h2>
+
+    <div style="width:50%;margin:auto;background:#eee;border-radius:6px;">
+        <div id="bar" style="height:30px;width:0%;background:#4caf50;border-radius:6px;"></div>
+    </div>
+
+    <p id="percent">0%</p>
+
+    <script>
+        const jobId = "{{ job_id }}";
+
+        function checkProgress() {
+            fetch("/progress/" + jobId)
+                .then(res => res.json())
+                .then(data => {
+                    let p = data.progress;
+                    document.getElementById("bar").style.width = p + "%";
+                    document.getElementById("percent").innerText = p + "%";
+
+                    if (p >= 100) {
+                        window.location.href = "/download/" + data.output;
+                    } else {
+                        setTimeout(checkProgress, 1000);
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+
+        checkProgress();
+    </script>
+
+</body>
+
+</html>
