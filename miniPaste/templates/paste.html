@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Paste {{ paste_id }}</title>
+</head>
+
+<body style="font-family:sans-serif; margin:40px;">
+
+    <h2>Paste ID: {{ paste_id }}</h2>
+
+    <!-- Copy Link Section -->
+    <div style="margin-bottom: 20px;">
+        <input id="pasteLink" type="text" value="{{ request.url }}" style="width: 300px; padding: 6px;" readonly>
+        <button onclick="copyLink()" style="padding:6px 10px;">Copy URL</button>
+    </div>
+
+    <!-- Show Paste Content -->
+    <pre style="background:#f1f1f1; padding:20px; border-radius:6px; white-space:pre-wrap;">
+{{ content }}
+</pre>
+
+    <script>
+        function copyLink() {
+            const input = document.getElementById("pasteLink");
+            input.select();
+            input.setSelectionRange(0, 99999);  // for mobile
+            navigator.clipboard.writeText(input.value)
+                .then(() => alert("Copied!"));
+        }
+    </script>
+
+</body>
+
+</html>
