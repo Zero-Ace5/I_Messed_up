@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Short URL</title>
+</head>
+
+<body style="text-align:center; font-family:sans-serif; margin-top:50px;">
+
+    <h2>Your Short URL</h2>
+
+    <input id="short" type="text" value="{{ short_link }}" style="width:300px; padding:6px;" readonly>
+    <button onclick="copyShort()" style="padding:6px 10px;">Copy</button>
+
+    <p><a href="{{ short_link }}" target="_blank">Open link</a></p>
+
+    <script>
+        function copyShort() {
+            const input = document.getElementById("short");
+            input.select();
+            navigator.clipboard.writeText(input.value)
+                .then(() => alert("Copied!"));
+        }
+    </script>
+
+</body>
+
+</html>

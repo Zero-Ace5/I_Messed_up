@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>URL Shortener</title>
+</head>
+
+<body style="text-align:center; font-family:sans-serif; margin-top:50px;">
+
+    <h2>Simple URL Shortener</h2>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="url" placeholder="Enter long URL" size="50" required>
+        <br><br>
+        <button type="submit">Shorten</button>
+    </form>
+
+</body>
+
+</html>
