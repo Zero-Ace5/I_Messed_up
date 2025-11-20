@@ -36,7 +36,8 @@ def index():
             return render_template("index.html", error="No File Seniore!")
         # checking if form data was received or not
 
-        filename = uuid.uuid4().hex + ".jpg"
+        ext = file.filename.rsplit(".", 1)[-1].lower()
+        filename = uuid.uuid4().hex + "." + ext
         input_path = os.path.join(UPLOAD_DIR, filename)
         file.save(input_path)
         # generating file name and saving it
@@ -45,8 +46,19 @@ def index():
 
         img = Image.open(input_path)
 
-        img = img.convert("RGB")
-        img.save(output_path, "JPEG", optimize=True, quality=quality)
+        if ext in ["jpg", "jpeg"]:
+            img = img.convert("RGB")
+            img.save(output_path, "JPEG", optimize=True, quality=quality)
+        elif ext == "png":
+            img.save(output_path, "PNG", optimize=True)
+
+        elif ext == "webp":
+            img.save(output_path, "WEBP", quality=quality, method=6)
+
+        else:
+            img = img.convert("RGB")
+            output_path = os.path.join(OUTPUT_DIR, uuid.uuid4().hex + ".jpg")
+            img.save(output_path, "JPEG", optimize=True, quality=quality)
         # actual conversion
 
         threading.Thread(target=delete_later, args=(
