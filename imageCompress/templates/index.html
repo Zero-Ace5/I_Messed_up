@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Compressor</title>
+</head>
+
+<body style="text-align:center; font-family:sans-serif; margin-top:50px;">
+
+    <h2>Simple Image Compressor</h2>
+    <p>Select an image and choose compression quality.</p>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required><br><br>
+
+        <label>Quality (1 = smallest file, 95 = best quality):</label><br>
+        <input type="range" name="quality" min="1" max="95" value="60"><br><br>
+
+        <button type="submit">Compress Image</button>
+    </form>
+
+</body>
+
+</html>
