@@ -6,6 +6,13 @@ app = Flask(__name__)
 
 
 def summarize_text(text, ratio=0.3):
+    STOPWORDS = {
+        "the", "is", "to", "and", "a", "an", "of", "in", "on", "for", "with", "as", "at", "by",
+        "be", "this", "that", "it", "its", "are", "was", "were", "from", "or", "which", "but",
+        "not", "has", "have", "had", "am", "do", "does", "did", "so", "if", "then", "than",
+        "because", "while", "about", "into", "out", "up", "down", "over", "under"
+    }
+
     text = text.strip()
     if not text:
         return ""
@@ -16,7 +23,8 @@ def summarize_text(text, ratio=0.3):
 
     freq = {}
     for w in words:
-        freq[w] = freq.get(w, 0) + 1
+        if w not in STOPWORDS:
+            freq[w] = freq.get(w, 0) + 1
 
     max_freq = max(freq.values())
     for w in freq:
