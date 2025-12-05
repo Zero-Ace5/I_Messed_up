@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tiny Calculator</title>
+</head>
+
+<body style="font-family:sans-serif; margin:40px; text-align:center;">
+
+    <h2>Web Calculator</h2>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="a" placeholder="First number" required>
+        <select name="op">
+            <option value="add">+</option>
+            <option value="sub">-</option>
+            <option value="mul">×</option>
+            <option value="div">÷</option>
+        </select>
+        <input type="text" name="b" placeholder="Second number" required>
+        <button type="submit">Calculate</button>
+    </form>
+
+    {% if result is not none %}
+    <h3 style="margin-top:30px;">Result: {{ result }}</h3>
+    {% endif %}
+
+</body>
+
+</html>
