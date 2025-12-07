@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Color Palette Generator</title>
+</head>
+
+<body style="font-family:sans-serif; margin:40px; text-align:center;">
+    <h2>Random Color Palette Generator</h2>
+
+    <form method="POST">
+        <input type="number" name="count" min="1" max="50" value="5">
+        <button type="submit">Generate</button>
+    </form>
+
+    <hr>
+
+    {% if colors %}
+    <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:20px; margin-top:30px;">
+        {% for c in colors %}
+        <div style="
+                    width:120px;
+                    height:120px;
+                    border-radius:10px;
+                    border:2px solid #0003;
+                    background: {{ c }};
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-weight:bold;
+                    color:#fff;
+                    text-shadow:1px 1px 3px #000;
+                ">
+            {{ c }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+
+</html>
