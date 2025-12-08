@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Meme Ready</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+
+        img {
+            max-width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Your Meme</h2>
+
+    <a href="{{ url_for('download', filename=filename) }}">Download Meme</a>
+    <br><br>
+
+    <img src="{{ url_for('download', filename=filename) }}">
+
+    <br><br>
+    <a href="{{ url_for('index') }}">Create Another</a>
+
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Meme Maker</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+
+        input,
+        button {
+            padding: 8px;
+            margin: 6px;
+            width: 80%;
+            max-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Simple Meme Generator</h2>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required><br>
+        <input type="text" name="top" placeholder="Top text"><br>
+        <input type="text" name="bottom" placeholder="Bottom text"><br>
+        <button type="submit">Generate Meme</button>
+    </form>
+
+</body>
+
+</html>
