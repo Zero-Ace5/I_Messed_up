@@ -78,10 +78,3 @@ def reveal(token):
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-# Questions (old program)
-# what def _load_data() -> Dict[str, Any]: or def _save_data(data: Dict[str, Any]) -> None: do?
-# what does  os.replace(tmp, DATA_FILE) do?
-# Questions(new program)
-# if entry.get("expires_at") and int(time.time()) > int(entry["expires_at"]):
-# can't this be entry.get("expires_at") < int(time.time())
